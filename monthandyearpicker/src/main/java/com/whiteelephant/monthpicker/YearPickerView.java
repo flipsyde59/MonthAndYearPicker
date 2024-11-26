@@ -2,7 +2,6 @@ package com.whiteelephant.monthpicker;
 
 import android.content.Context;
 import android.content.res.Resources;
-import androidx.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +14,11 @@ import android.widget.TextView;
 import com.example.prem.firstpitch.R;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 
-class YearPickerView extends ListView {
+public class YearPickerView extends ListView {
 
-    private Context _context;
     final YearAdapter _adapter;
     final int _viewSize;
     final int _childSize;
@@ -37,7 +36,6 @@ class YearPickerView extends ListView {
 
     public YearPickerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this._context = context;
         final LayoutParams frame = new LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         setLayoutParams(frame);
@@ -113,13 +111,11 @@ class YearPickerView extends ListView {
             }
         }
 
-        public boolean setSelection(int year) {
+        public void setSelection(int year) {
             if (__activatedYear != year) {
                 __activatedYear = year;
                 notifyDataSetChanged();
-                return true;
             }
-            return false;
         }
 
         @Override
@@ -177,7 +173,7 @@ class YearPickerView extends ListView {
                 v.setTag(activated);
 
             }
-            v.setText(Integer.toString(year));
+            v.setText(String.format(Locale.getDefault(), "%d", year));
             return v;
         }
 

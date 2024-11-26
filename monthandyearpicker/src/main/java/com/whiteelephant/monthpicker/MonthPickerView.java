@@ -3,7 +3,6 @@ package com.whiteelephant.monthpicker;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -22,7 +21,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-class MonthPickerView extends FrameLayout {
+public class MonthPickerView extends FrameLayout {
 
     YearPickerView _yearView;
     ListView _monthList;
@@ -37,7 +36,7 @@ class MonthPickerView extends FrameLayout {
     MonthPickerDialog.OnMonthChangedListener _onMonthChanged;
     OnDateSet _onDateSet;
     OnCancel _onCancel;
-    private String[] _monthNames;
+    private final String[] _monthNames;
 
     /*private static final int[] ATTRS_TEXT_COLOR = new int[] {
             com.android.internal.R.attr.textColor};
@@ -147,13 +146,7 @@ class MonthPickerView extends FrameLayout {
 
         if (headerBgColor == 0) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                headerBgColor = android.R.attr.colorAccent;
-            } else {
-                //Get colorAccent defined for AppCompat
-                headerBgColor = context.getResources().getIdentifier("colorAccent",
-                        "attr", context.getPackageName());
-            }
+            headerBgColor = android.R.attr.colorAccent;
             TypedValue outValue = new TypedValue();
             context.getTheme().resolveAttribute(headerBgColor, outValue, true);
             headerBgColor = outValue.data;
@@ -161,19 +154,13 @@ class MonthPickerView extends FrameLayout {
 
         if (monthBgSelectedColor == 0) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                monthBgSelectedColor = android.R.attr.colorAccent;
-            } else {
-                //Get colorAccent defined for AppCompat
-                monthBgSelectedColor = context.getResources().getIdentifier("colorAccent",
-                        "attr", context.getPackageName());
-            }
+            monthBgSelectedColor = android.R.attr.colorAccent;
             TypedValue outValue = new TypedValue();
             context.getTheme().resolveAttribute(monthBgSelectedColor, outValue, true);
             monthBgSelectedColor = outValue.data;
         }
 
-        HashMap<String, Integer> map = new HashMap();
+        HashMap<String, Integer> map = new HashMap<>();
         if (monthBgColor != 0)
             map.put("monthBgColor", monthBgColor);
         if (monthBgSelectedColor != 0)
@@ -261,7 +248,7 @@ class MonthPickerView extends FrameLayout {
             public void onYearChanged(YearPickerView view, int selectedYear) {
                 Log.d("----------------", "selected year = " + selectedYear);
                 MonthPickerView.this._selectedYear = selectedYear;
-                _year.setText("" + selectedYear);
+                _year.setText(String.format(Locale.getDefault(), "%d", selectedYear));
                 _year.setTextColor(_headerFontColorSelected);
                 _month.setTextColor(_headerFontColorNormal);
                 if (_onYearChanged != null) {
@@ -351,7 +338,7 @@ class MonthPickerView extends FrameLayout {
 
     protected void setActivatedYear(int activatedYear) {
         _yearView.setActivatedYear(activatedYear);
-        _year.setText(Integer.toString(activatedYear));
+        _year.setText(String.format(Locale.getDefault(), "%d", activatedYear));
     }
 
     protected void setMonthRange(int minMonth, int maxMonth) {
@@ -378,7 +365,7 @@ class MonthPickerView extends FrameLayout {
     }
 
     protected void setTitle(String dialogTitle) {
-        if (dialogTitle != null && dialogTitle.trim().length() > 0) {
+        if (dialogTitle != null && !dialogTitle.trim().isEmpty()) {
             _title.setText(dialogTitle);
             _title.setVisibility(VISIBLE);
         } else {

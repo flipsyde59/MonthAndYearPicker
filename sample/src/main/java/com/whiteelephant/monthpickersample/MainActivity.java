@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(MainActivity.this, new MonthPickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) {
-                        year.setText(Integer.toString(selectedYear));
+                        year.setText(String.format(Locale.getDefault(), "%d", selectedYear));
                         choosenYear = selectedYear;
                     }
                 }, choosenYear, 0);
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(MainActivity.this, new MonthPickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) {
-                        qty.setText(Integer.toString(selectedYear));
+                        qty.setText(String.format(Locale.getDefault(), "%d", selectedYear));
                     }
                 }, /* activated number in year */ 3, 0);
 

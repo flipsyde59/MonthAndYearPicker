@@ -44,7 +44,8 @@
             android:paddingBottom="8dp"
             android:paddingRight="24dp"
             android:paddingLeft="24dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:foreground="?android:attr/selectableItemBackground"/>
 
         <TextView
             android:id="@+id/cancel_action"
@@ -57,7 +58,8 @@
             android:paddingBottom="8dp"
             android:paddingRight="24dp"
             android:paddingLeft="24dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:foreground="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
 
 

@@ -21,7 +21,7 @@ import java.util.Calendar;
 public class MonthPickerDialog extends AlertDialog implements OnClickListener, OnDateChangedListener {
     private final MonthPickerView _monthPicker;
     private final OnDateSetListener _callBack;
-    private View view;
+    private final View view;
 
     /**
      * @param context     The context the dialog is to run in.
@@ -194,14 +194,13 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
     public static class Builder {
 
         private static final String TAG = MonthPickerDialog.Builder.class.getName();
-        private Context _context;
-        private OnDateSetListener _callBack;
+        private final Context _context;
+        private final OnDateSetListener _callBack;
         private int _activatedMonth, _activatedYear;
         private int _minMonth = Calendar.JANUARY, _maxMonth = Calendar.DECEMBER;
         private int _minYear, _maxYear;
         private boolean monthOnly, yearOnly;
         private String title = null;
-        private MonthPickerDialog monthPickerDialog;
         private OnYearChangedListener _onYearChanged;
         private OnMonthChangedListener _onMonthChanged;
 
@@ -502,7 +501,7 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
             }
 
 
-            monthPickerDialog = new MonthPickerDialog(_context, _callBack, _activatedYear,
+            MonthPickerDialog monthPickerDialog = new MonthPickerDialog(_context, _callBack, _activatedYear,
                     _activatedMonth);
             if (monthOnly) {
                 monthPickerDialog.showMonthOnly();

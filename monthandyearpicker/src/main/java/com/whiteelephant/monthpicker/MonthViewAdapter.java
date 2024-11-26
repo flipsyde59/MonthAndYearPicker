@@ -1,12 +1,13 @@
 package com.whiteelephant.monthpicker;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.example.prem.firstpitch.R;
 
@@ -14,10 +15,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 
-class MonthViewAdapter extends BaseAdapter {
+public class MonthViewAdapter extends BaseAdapter {
 
     private int _minMonth, _maxMonth, _activatedMonth;
-    private Context _context;
+    private final Context _context;
     private HashMap<String, Integer> _colors;
     private OnDaySelectedListener mOnDaySelectedListener;
 
@@ -58,11 +59,9 @@ class MonthViewAdapter extends BaseAdapter {
             v.setClickable(true);
             v.setOnMonthClickListener(mOnDayClickListener);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // If we're running on Honeycomb or newer, then we can use the Theme's
-            // selectableItemBackground to ensure that the View has a pressed state
-            v.setBackgroundDrawable(_context.getDrawable(R.drawable.month_ripplr));
-        }
+        // If we're running on Honeycomb or newer, then we can use the Theme's
+        // selectableItemBackground to ensure that the View has a pressed state
+        v.setBackground(AppCompatResources.getDrawable(_context, R.drawable.month_ripplr));
         v.setMonthParams(_activatedMonth, _minMonth, _maxMonth);
         v.reuse();
         v.invalidate();
@@ -145,7 +144,7 @@ class MonthViewAdapter extends BaseAdapter {
         }
     }
 
-    void setColors(HashMap map) {
+    void setColors(HashMap<String, Integer> map) {
         _colors = map;
     }
 }

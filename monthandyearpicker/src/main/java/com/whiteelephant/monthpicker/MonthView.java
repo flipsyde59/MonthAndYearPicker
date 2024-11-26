@@ -10,13 +10,15 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+
 import com.example.prem.firstpitch.R;
 
 import java.text.DateFormatSymbols;
 import java.util.HashMap;
 import java.util.Locale;
 
-class MonthView extends ListView {
+public class MonthView extends ListView {
 
     // constants
     private static final int DEFAULT_HEIGHT = 100;
@@ -25,7 +27,7 @@ class MonthView extends ListView {
     private static final int MAX_NUM_ROWS = 3;
     private static final int DAY_SEPARATOR_WIDTH = 1;
     // days to display
-    private int _numDays = DEFAULT_NUM_DAYS;
+    private final int _numDays = DEFAULT_NUM_DAYS;
     private int _numCells = _numDays;
     private int _numRows = DEFAULT_NUM_ROWS;
     // layout padding
@@ -37,16 +39,15 @@ class MonthView extends ListView {
     private Paint _monthNumberDisabledPaint;
     private Paint _monthNumberSelectedPaint;
     // month
-    private String[] _monthNames;
-    private int _monthTextSize;
-    private int _monthHeaderSize;
-    private int _monthSelectedCircleSize;
+    private final String[] _monthNames;
+    private final int _monthTextSize;
+    private final int _monthHeaderSize;
+    private final int _monthSelectedCircleSize;
     private int _monthBgSelectedColor;
     private int _monthFontColorNormal;
     private int _monthFontColorSelected;
     private int _monthFontColorDisabled;
     private int _maxMonth, _minMonth;
-    private int _rowHeightKey;
     private int _selectedMonth = -1;
     // listener
     private OnMonthClickListener _onMonthClickListener;
@@ -79,7 +80,7 @@ class MonthView extends ListView {
                     43, displayMetrics);
         }
 
-        _rowHeightKey = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+        int _rowHeightKey = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 250, displayMetrics);
         _rowHeight = (_rowHeightKey - _monthHeaderSize) / MAX_NUM_ROWS;
 
@@ -122,7 +123,7 @@ class MonthView extends ListView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         drawDays(canvas);
     }
 
@@ -136,7 +137,7 @@ class MonthView extends ListView {
         for (int month = 0; month < _monthNames.length; month++) {
             int x = (2 * j + 1) * dayWidthHalf + _padding;
             if (_selectedMonth == month) {
-                canvas.drawCircle(x, y - (_monthTextSize / 3), _monthSelectedCircleSize, _monthNumberSelectedPaint);
+                canvas.drawCircle(x, y - ((float) _monthTextSize / 3), _monthSelectedCircleSize, _monthNumberSelectedPaint);
                 if (_monthFontColorSelected != 0)
                     _monthNumberPaint.setColor(_monthFontColorSelected);
             } else {
@@ -193,7 +194,7 @@ class MonthView extends ListView {
     }
 
     protected void setColors(HashMap<String, Integer> colors) {
-        if (colors.containsKey("monthBgSelectedColor") )
+        if (colors.containsKey("monthBgSelectedColor"))
             _monthBgSelectedColor = colors.get("monthBgSelectedColor");
         if (colors.containsKey("monthFontColorNormal"))
             _monthFontColorNormal = colors.get("monthFontColorNormal");
@@ -241,14 +242,25 @@ class MonthView extends ListView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                return true;
+
             case MotionEvent.ACTION_UP:
+                performClick();
                 int day = getMonthFromLocation(event.getX(), event.getY());
                 if (day >= 0) {
                     onDayClick(day);
                 }
-                break;
+                return true;
         }
+        return false;
+    }
+    @Override
+    public boolean performClick() {
+        super.performClick();
         return true;
     }
 }

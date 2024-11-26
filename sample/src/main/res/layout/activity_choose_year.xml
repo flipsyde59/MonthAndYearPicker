@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Choose Year" />
+        android:text="@string/choose_year" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Year : "
+            android:text="@string/select_year"
             android:textColor="@color/colorAccent"
             android:textSize="18sp" />
 
@@ -32,7 +32,7 @@
             android:id="@+id/year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2017"
+            android:text="@string/_2017"
             android:textColor="@color/colorAccent"
             android:textSize="22sp" />
 

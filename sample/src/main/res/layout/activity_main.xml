@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Month Picker" />
+        android:text="@string/month_picker" />
 
     <Button
         android:id="@+id/date_picker"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Date Picker"
+        android:text="@string/date_picker"
         android:layout_gravity="center" />
 
 </LinearLayout>
