@@ -289,6 +289,11 @@ public class MonthPickerView extends FrameLayout {
     protected void setMaxMonth(int maxMonth) {
         if (maxMonth <= Calendar.DECEMBER && maxMonth >= Calendar.JANUARY) {
             _monthViewAdapter.setMaxMonth(maxMonth);
+            if (maxMonth < _selectedMonth) {
+                setActivatedMonth(maxMonth);
+            } else {
+                _monthViewAdapter.setSelectedMonth(_selectedMonth);
+            }
         } else {
             throw new IllegalArgumentException("Month out of range please send months between " +
                     "Calendar.JANUARY, Calendar.DECEMBER");
@@ -299,6 +304,11 @@ public class MonthPickerView extends FrameLayout {
     protected void setMinMonth(int minMonth) {
         if (minMonth >= Calendar.JANUARY && minMonth <= Calendar.DECEMBER) {
             _monthViewAdapter.setMinMonth(minMonth);
+            if (minMonth > _selectedMonth) {
+                setActivatedMonth(minMonth);
+            } else {
+                _monthViewAdapter.setSelectedMonth(_selectedMonth);
+            }
         } else {
             throw new IllegalArgumentException("Month out of range please send months between" +
                     " Calendar.JANUARY, Calendar.DECEMBER");
@@ -328,7 +338,8 @@ public class MonthPickerView extends FrameLayout {
 
     protected void setActivatedMonth(int activatedMonth) {
         if (activatedMonth >= Calendar.JANUARY && activatedMonth <= Calendar.DECEMBER) {
-            _monthViewAdapter.setActivatedMonth(activatedMonth);
+            _selectedMonth = activatedMonth;
+            _monthViewAdapter.setSelectedMonth(activatedMonth);
            _month.setText(_monthNames[activatedMonth]);
         } else {
             throw new IllegalArgumentException("Month out of range please send months between Calendar.JANUARY, Calendar.DECEMBER");
@@ -344,7 +355,7 @@ public class MonthPickerView extends FrameLayout {
     protected void setMonthRange(int minMonth, int maxMonth) {
         if (minMonth < maxMonth) {
             setMinMonth(minMonth);
-            setMaxYear(maxMonth);
+            setMaxMonth(maxMonth);
         } else {
             throw new IllegalArgumentException("maximum month is less then minimum month");
         }

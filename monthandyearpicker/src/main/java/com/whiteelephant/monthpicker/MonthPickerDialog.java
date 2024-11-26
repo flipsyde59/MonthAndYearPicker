@@ -503,6 +503,17 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
 
             MonthPickerDialog monthPickerDialog = new MonthPickerDialog(_context, _callBack, _activatedYear,
                     _activatedMonth);
+            if (_activatedYear == _maxYear) {
+                monthPickerDialog.setMinMonth(_minMonth);
+            }
+            if (_activatedYear == _maxYear) {
+                monthPickerDialog.setMaxMonth(_maxMonth);
+            }
+            monthPickerDialog.setMinYear(_minYear);
+            monthPickerDialog.setMaxYear(_maxYear);
+            monthPickerDialog.setActivatedMonth(_activatedMonth);
+            monthPickerDialog.setActivatedYear(_activatedYear);
+
             if (monthOnly) {
                 monthPickerDialog.showMonthOnly();
                 _minYear = 0;
@@ -513,22 +524,31 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
                 _minMonth = 0;
                 _maxMonth = 0;
                 _activatedMonth = 0;
+                if (_onYearChanged != null) {
+                    monthPickerDialog.setOnYearChangedListener(_onYearChanged);
+                }
+            } else {
+                OnYearChangedListener onYearChangedListener = new OnYearChangedListener() {
+                    @Override
+                    public void onYearChanged(int year) {
+                        monthPickerDialog.setMinMonth(Calendar.JANUARY);
+                        monthPickerDialog.setMaxMonth(Calendar.DECEMBER);
+                        if (year == _maxYear) {
+                            monthPickerDialog.setMaxMonth(_maxMonth);
+                        }
+                        if (year == _minYear) {
+                            monthPickerDialog.setMinMonth(_minMonth);
+                        }
+                        if (_onYearChanged != null) {
+                            _onYearChanged.onYearChanged(year);
+                        }
+                    }
+                };
+                monthPickerDialog.setOnYearChangedListener(onYearChangedListener);
             }
-            monthPickerDialog.setMinMonth(_minMonth);
-            monthPickerDialog.setMaxMonth(_maxMonth);
-            monthPickerDialog.setMinYear(_minYear);
-            monthPickerDialog.setMaxYear(_maxYear);
-            monthPickerDialog.setActivatedMonth(_activatedMonth);
-            monthPickerDialog.setActivatedYear(_activatedYear);
-
             if (_onMonthChanged != null) {
                 monthPickerDialog.setOnMonthChangedListener(_onMonthChanged);
             }
-
-            if (_onYearChanged != null) {
-                monthPickerDialog.setOnYearChangedListener(_onYearChanged);
-            }
-
             if (title != null) {
                 monthPickerDialog.setMonthPickerTitle(title.trim());
             }

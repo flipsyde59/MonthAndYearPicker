@@ -127,18 +127,9 @@ public class MonthViewAdapter extends BaseAdapter {
         }
     }
 
-
     void setMinMonth(int minMonth) {
         if (minMonth >= Calendar.JANUARY && minMonth <= Calendar.DECEMBER) {
             _minMonth = minMonth;
-        } else {
-            throw new IllegalArgumentException("Month out of range please send months between Calendar.JANUARY, Calendar.DECEMBER");
-        }
-    }
-
-    void setActivatedMonth(int activatedMonth) {
-        if (activatedMonth >= Calendar.JANUARY && activatedMonth <= Calendar.DECEMBER) {
-            _activatedMonth = activatedMonth;
         } else {
             throw new IllegalArgumentException("Month out of range please send months between Calendar.JANUARY, Calendar.DECEMBER");
         }
