@@ -1,5 +1,6 @@
 package com.whiteelephant.monthpicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -69,6 +70,7 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
      * @param year        The initial year of the dialog.
      * @param monthOfYear The initial month of the dialog.
      */
+    @SuppressLint("InflateParams")
     private MonthPickerDialog(Context context,
                               int theme,
                               OnDateSetListener callBack,
@@ -81,31 +83,18 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
         view = inflater.inflate(R.layout.month_picker_dialog, null);
 
         setView(view);
-        _monthPicker = (MonthPickerView) view.findViewById(R.id.monthPicker);
-        _monthPicker.setOnDateListener(new MonthPickerView.OnDateSet() {
-            @Override
-            public void onDateSet() {
-                tryNotifyDateSet();
-                MonthPickerDialog.this.dismiss();
-            }
+        _monthPicker = view.findViewById(R.id.monthPicker);
+        _monthPicker.setOnDateListener(() -> {
+            tryNotifyDateSet();
+            MonthPickerDialog.this.dismiss();
         });
-        _monthPicker.setOnCancelListener(new MonthPickerView.OnCancel() {
-            @Override
-            public void onCancel() {
-                MonthPickerDialog.this.dismiss();
-            }
-        });
+        _monthPicker.setOnCancelListener(MonthPickerDialog.this::dismiss);
 
         // to show dialog bigger view in landscape mode we are increasing the
         // height and width of the dialog. If we do that android don't dismiss the dialog after
         // rotation and try to render landscape UI in portrait mode which is not correct.
         // so dismissing the dialog on each time when orientation changes.
-        _monthPicker.setOnConfigurationChanged(new OnConfigChangeListener() {
-            @Override
-            public void onConfigChange() {
-                dismiss();
-            }
-        });
+        _monthPicker.setOnConfigurationChanged(this::dismiss);
         _monthPicker.init(year, monthOfYear);
     }
 
@@ -282,13 +271,8 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
          */
         public Builder setMaxMonth(@IntRange(from = Calendar.JANUARY, to = Calendar.DECEMBER)
                                            int maxMonth) {
-            /* if (maxMonth >= Calendar.JANUARY && maxMonth <= Calendar.DECEMBER) {*/
             this._maxMonth = maxMonth;
             return this;
-            /*} else {
-                throw new IllegalArgumentException("Month range should be between 0 " +
-                        "(Calender.JANUARY) to 11 (Calendar.DECEMBER)");
-            }*/
         }
 
 
@@ -528,20 +512,17 @@ public class MonthPickerDialog extends AlertDialog implements OnClickListener, O
                     monthPickerDialog.setOnYearChangedListener(_onYearChanged);
                 }
             } else {
-                OnYearChangedListener onYearChangedListener = new OnYearChangedListener() {
-                    @Override
-                    public void onYearChanged(int year) {
-                        monthPickerDialog.setMinMonth(Calendar.JANUARY);
-                        monthPickerDialog.setMaxMonth(Calendar.DECEMBER);
-                        if (year == _maxYear) {
-                            monthPickerDialog.setMaxMonth(_maxMonth);
-                        }
-                        if (year == _minYear) {
-                            monthPickerDialog.setMinMonth(_minMonth);
-                        }
-                        if (_onYearChanged != null) {
-                            _onYearChanged.onYearChanged(year);
-                        }
+                OnYearChangedListener onYearChangedListener = year -> {
+                    monthPickerDialog.setMinMonth(Calendar.JANUARY);
+                    monthPickerDialog.setMaxMonth(Calendar.DECEMBER);
+                    if (year == _maxYear) {
+                        monthPickerDialog.setMaxMonth(_maxMonth);
+                    }
+                    if (year == _minYear) {
+                        monthPickerDialog.setMinMonth(_minMonth);
+                    }
+                    if (_onYearChanged != null) {
+                        _onYearChanged.onYearChanged(year);
                     }
                 };
                 monthPickerDialog.setOnYearChangedListener(onYearChangedListener);

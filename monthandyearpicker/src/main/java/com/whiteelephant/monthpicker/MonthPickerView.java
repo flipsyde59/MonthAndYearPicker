@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.example.prem.firstpitch.R;
 
 import java.text.DateFormatSymbols;
@@ -38,11 +40,6 @@ public class MonthPickerView extends FrameLayout {
     OnCancel _onCancel;
     private final String[] _monthNames;
 
-    /*private static final int[] ATTRS_TEXT_COLOR = new int[] {
-            com.android.internal.R.attr.textColor};
-    private static final int[] ATTRS_DISABLED_ALPHA = new int[] {
-            com.android.internal.R.attr.disabledAlpha};*/
-
     public MonthPickerView(Context context) {
         this(context, null);
         _context = context;
@@ -60,130 +57,91 @@ public class MonthPickerView extends FrameLayout {
         mInflater.inflate(R.layout.month_picker_view, this);
         _monthNames = new DateFormatSymbols(Locale.getDefault()).getShortMonths();
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.monthPickerDialog,
-                defStyleAttr, 0);
+        int headerBgColor;
+        int monthBgColor;
+        int headerTitleColor;
+        int actionButtonColor;
+        HashMap<String, Integer> map;
+        try (TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MonthPickerView,
+                defStyleAttr, 0)) {
 
-        // getting default values based on the user's theme.
+            headerBgColor = a.getColor(R.styleable.MonthPickerView_headerBgColor, 0);
+            _headerFontColorNormal = a.getColor(R.styleable.MonthPickerView_headerFontColorNormal, 0);
+            _headerFontColorSelected = a.getColor(R.styleable.MonthPickerView_headerFontColorSelected, 0);
+            monthBgColor = a.getColor(R.styleable.MonthPickerView_monthBgColor, 0);
+            int monthBgSelectedColor = a.getColor(R.styleable.MonthPickerView_monthBgSelectedColor, 0);
+            int monthFontColorNormal = a.getColor(R.styleable.MonthPickerView_monthFontColorNormal, 0);
+            int monthFontColorSelected = a.getColor(R.styleable.MonthPickerView_monthFontColorSelected, 0);
+            int monthFontColorDisabled = a.getColor(R.styleable.MonthPickerView_monthFontColorDisabled, 0);
+            headerTitleColor = a.getColor(R.styleable.MonthPickerView_headerTitleColor, 0);
+            actionButtonColor = a.getColor(R.styleable.MonthPickerView_dialogActionButtonColor, 0);
 
-        /*
+            if (monthFontColorNormal == 0) {
+                monthFontColorNormal = ContextCompat.getColor(_context, R.color.fontBlackEnable);
+            }
 
-       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (monthFontColorSelected == 0) {
+                monthFontColorSelected = ContextCompat.getColor(_context, R.color.fontWhiteEnable);
+            }
+
+            if (monthFontColorDisabled == 0) {
+                monthFontColorDisabled = ContextCompat.getColor(_context, R.color.fontBlackDisable);
+
+            }
+            if (_headerFontColorNormal == 0) {
+                _headerFontColorNormal = ContextCompat.getColor(_context, R.color.fontWhiteDisable);
+            }
+            if (_headerFontColorSelected == 0) {
+                _headerFontColorSelected = ContextCompat.getColor(_context, R.color.fontWhiteEnable);
+            }
+            if (headerTitleColor == 0) {
+                headerTitleColor = ContextCompat.getColor(_context, R.color.fontWhiteEnable);
+            }
+            if (monthBgColor == 0) {
+                monthBgColor = ContextCompat.getColor(_context, R.color.fontWhiteEnable);
+            }
+
+            if (headerBgColor == 0) {
+
                 headerBgColor = android.R.attr.colorAccent;
-            } else {
-                //Get colorAccent defined for AppCompat
-                headerBgColor = context.getResources().getIdentifier("colorAccent", "attr", context.getPackageName());
+                TypedValue outValue = new TypedValue();
+                context.getTheme().resolveAttribute(headerBgColor, outValue, true);
+                headerBgColor = outValue.data;
             }
-            TypedValue outValue = new TypedValue();
-            context.getTheme().resolveAttribute(headerBgColor, outValue, true);
-            int color = outValue.data;
 
-        // OR
-        TypedValue typedValue = new TypedValue();
+            if (monthBgSelectedColor == 0) {
 
-        TypedArray a = mContext.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent, R.attr.colorPrimary });
-        int color = a.getColor(0, 0);
-
-        a.recycle();
-
-        // OR
-
-        final TypedValue value = new TypedValue ();
-        context.getTheme ().resolveAttribute (R.attr.colorAccent, value, true);
-        int color = value.data
-    */
-
-        int headerBgColor = a.getColor(R.styleable.monthPickerDialog_headerBgColor, 0);
-        _headerFontColorNormal = a.getColor(R.styleable.monthPickerDialog_headerFontColorNormal, 0);
-        _headerFontColorSelected = a.getColor(R.styleable.monthPickerDialog_headerFontColorSelected, 0);
-        int monthBgColor = a.getColor(R.styleable.monthPickerDialog_monthBgColor, 0);
-        int monthBgSelectedColor = a.getColor(R.styleable.monthPickerDialog_monthBgSelectedColor, 0);
-        int monthFontColorNormal = a.getColor(R.styleable.monthPickerDialog_monthFontColorNormal, 0);
-        int monthFontColorSelected = a.getColor(R.styleable.monthPickerDialog_monthFontColorSelected, 0);
-        int monthFontColorDisabled = a.getColor(R.styleable.monthPickerDialog_monthFontColorDisabled, 0);
-        int headerTitleColor = a.getColor(R.styleable.monthPickerDialog_headerTitleColor, 0);
-        int actionButtonColor = a.getColor(R.styleable.monthPickerDialog_dialogActionButtonColor, 0);
-
-         if (monthFontColorNormal == 0) {
-
-             monthFontColorNormal = getResources().getColor(R.color.fontBlackEnable);
-
-           /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                monthFontColorNormal = android.R.attr.textColor;
-            } else {
-                monthFontColorNormal = getResources().getIdentifier("textColor", "attr", null);
+                monthBgSelectedColor = android.R.attr.colorAccent;
+                TypedValue outValue = new TypedValue();
+                context.getTheme().resolveAttribute(monthBgSelectedColor, outValue, true);
+                monthBgSelectedColor = outValue.data;
             }
-            TypedValue outValue = new TypedValue();
-            context.getTheme().resolveAttribute(monthFontColorNormal, outValue, true);
-            int color = outValue.data;
-            monthFontColorNormal = color;*/
 
+            map = new HashMap<>();
+            if (monthBgColor != 0)
+                map.put("monthBgColor", monthBgColor);
+            if (monthBgSelectedColor != 0)
+                map.put("monthBgSelectedColor", monthBgSelectedColor);
+            if (monthFontColorNormal != 0)
+                map.put("monthFontColorNormal", monthFontColorNormal);
+            if (monthFontColorSelected != 0)
+                map.put("monthFontColorSelected", monthFontColorSelected);
+            if (monthFontColorDisabled != 0)
+                map.put("monthFontColorDisabled", monthFontColorDisabled);
 
-            /*monthFontColorNormal = context.getTheme().resolveAttribute(
-                    android.R.attr.textColorPrimary, outValue, true) ? outValue.data : getResources().getColor(R.color.fontBlackEnable);*/
-
+            a.recycle();
         }
 
-        if (monthFontColorSelected == 0) {
-            monthFontColorSelected = getResources().getColor(R.color.fontWhiteEnable);
-        }
-
-        if (monthFontColorDisabled == 0) {
-            monthFontColorDisabled = getResources().getColor(R.color.fontBlackDisable);
-
-        }
-        if (_headerFontColorNormal == 0) {
-            _headerFontColorNormal = getResources().getColor(R.color.fontWhiteDisable);
-        }
-        if (_headerFontColorSelected == 0) {
-            _headerFontColorSelected = getResources().getColor(R.color.fontWhiteEnable);
-        }
-        if (headerTitleColor == 0) {
-            headerTitleColor = getResources().getColor(R.color.fontWhiteEnable);
-        }
-        if (monthBgColor == 0) {
-            monthBgColor = getResources().getColor(R.color.fontWhiteEnable);
-        }
-
-        if (headerBgColor == 0) {
-
-            headerBgColor = android.R.attr.colorAccent;
-            TypedValue outValue = new TypedValue();
-            context.getTheme().resolveAttribute(headerBgColor, outValue, true);
-            headerBgColor = outValue.data;
-        }
-
-        if (monthBgSelectedColor == 0) {
-
-            monthBgSelectedColor = android.R.attr.colorAccent;
-            TypedValue outValue = new TypedValue();
-            context.getTheme().resolveAttribute(monthBgSelectedColor, outValue, true);
-            monthBgSelectedColor = outValue.data;
-        }
-
-        HashMap<String, Integer> map = new HashMap<>();
-        if (monthBgColor != 0)
-            map.put("monthBgColor", monthBgColor);
-        if (monthBgSelectedColor != 0)
-            map.put("monthBgSelectedColor", monthBgSelectedColor);
-        if (monthFontColorNormal != 0)
-            map.put("monthFontColorNormal", monthFontColorNormal);
-        if (monthFontColorSelected != 0)
-            map.put("monthFontColorSelected", monthFontColorSelected);
-        if (monthFontColorDisabled != 0)
-            map.put("monthFontColorDisabled", monthFontColorDisabled);
-
-        a.recycle();
-
-        _monthList = (ListView) findViewById(R.id.listview);
-        _yearView = (YearPickerView) findViewById(R.id.yearView);
-        _month = (TextView) findViewById(R.id.month);
-        _year = (TextView) findViewById(R.id.year);
-        _title = (TextView) findViewById(R.id.title);
-        RelativeLayout _pickerBg = (RelativeLayout) findViewById(R.id.picker_view);
-        LinearLayout _header = (LinearLayout) findViewById(R.id.header);
-        RelativeLayout _actionBtnLay = (RelativeLayout) findViewById(R.id.action_btn_lay);
-        TextView ok = (TextView) findViewById(R.id.ok_action);
-        TextView cancel = (TextView) findViewById(R.id.cancel_action);
+        _monthList = findViewById(R.id.listview);
+        _yearView = findViewById(R.id.yearView);
+        _month = findViewById(R.id.month);
+        _year = findViewById(R.id.year);
+        _title = findViewById(R.id.title);
+        RelativeLayout _pickerBg = findViewById(R.id.picker_view);
+        LinearLayout _header = findViewById(R.id.header);
+        RelativeLayout _actionBtnLay = findViewById(R.id.action_btn_lay);
+        TextView ok = findViewById(R.id.ok_action);
+        TextView cancel = findViewById(R.id.cancel_action);
 
 
         if (actionButtonColor != 0) {
@@ -207,35 +165,22 @@ public class MonthPickerView extends FrameLayout {
         if(monthBgColor != 0)
             _actionBtnLay.setBackgroundColor(monthBgColor);
 
-        ok.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _onDateSet.onDateSet();
-            }
-        });
-        cancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _onCancel.onCancel();
-            }
-        });
+        ok.setOnClickListener(view -> _onDateSet.onDateSet());
+        cancel.setOnClickListener(view -> _onCancel.onCancel());
         _monthViewAdapter = new MonthViewAdapter(context);
         _monthViewAdapter.setColors(map);
-        _monthViewAdapter.setOnDaySelectedListener(new MonthViewAdapter.OnDaySelectedListener() {
-            @Override
-            public void onDaySelected(MonthViewAdapter view, int selectedMonth) {
-                Log.d("----------------", "MonthPickerDialogStyle selected month = " + selectedMonth);
-                MonthPickerView.this._selectedMonth = selectedMonth;
-                _month.setText(_monthNames[selectedMonth]);
-                if (!_showMonthOnly) {
-                    _monthList.setVisibility(View.GONE);
-                    _yearView.setVisibility(View.VISIBLE);
-                    _month.setTextColor(_headerFontColorNormal);
-                    _year.setTextColor(_headerFontColorSelected);
-                }
-                if (_onMonthChanged != null) {
-                    _onMonthChanged.onMonthChanged(selectedMonth);
-                }
+        _monthViewAdapter.setOnDaySelectedListener((view, selectedMonth) -> {
+            Log.d("----------------", "MonthPickerDialogStyle selected month = " + selectedMonth);
+            MonthPickerView.this._selectedMonth = selectedMonth;
+            _month.setText(_monthNames[selectedMonth]);
+            if (!_showMonthOnly) {
+                _monthList.setVisibility(View.GONE);
+                _yearView.setVisibility(View.VISIBLE);
+                _month.setTextColor(_headerFontColorNormal);
+                _year.setTextColor(_headerFontColorSelected);
+            }
+            if (_onMonthChanged != null) {
+                _onMonthChanged.onMonthChanged(selectedMonth);
             }
         });
         _monthList.setAdapter(_monthViewAdapter);
@@ -243,40 +188,30 @@ public class MonthPickerView extends FrameLayout {
         _yearView.setRange(_minYear, _maxYear);
         _yearView.setColors(map);
         _yearView.setYear(Calendar.getInstance().get(Calendar.YEAR));
-        _yearView.setOnYearSelectedListener(new YearPickerView.OnYearSelectedListener() {
-            @Override
-            public void onYearChanged(YearPickerView view, int selectedYear) {
-                Log.d("----------------", "selected year = " + selectedYear);
-                MonthPickerView.this._selectedYear = selectedYear;
-                _year.setText(String.format(Locale.getDefault(), "%d", selectedYear));
+        _yearView.setOnYearSelectedListener((view, selectedYear) -> {
+            Log.d("----------------", "selected year = " + selectedYear);
+            MonthPickerView.this._selectedYear = selectedYear;
+            _year.setText(String.format(Locale.getDefault(), "%d", selectedYear));
+            _year.setTextColor(_headerFontColorSelected);
+            _month.setTextColor(_headerFontColorNormal);
+            if (_onYearChanged != null) {
+                _onYearChanged.onYearChanged(selectedYear);
+            }
+        });
+        _month.setOnClickListener(view -> {
+            if (_monthList.getVisibility() == GONE) {
+                _yearView.setVisibility(GONE);
+                _monthList.setVisibility(VISIBLE);
+                _year.setTextColor(_headerFontColorNormal);
+                _month.setTextColor(_headerFontColorSelected);
+            }
+        });
+        _year.setOnClickListener(view -> {
+            if (_yearView.getVisibility() == GONE) {
+                _monthList.setVisibility(GONE);
+                _yearView.setVisibility(VISIBLE);
                 _year.setTextColor(_headerFontColorSelected);
                 _month.setTextColor(_headerFontColorNormal);
-                if (_onYearChanged != null) {
-                    _onYearChanged.onYearChanged(selectedYear);
-                }
-            }
-        });
-        _month.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (_monthList.getVisibility() == GONE) {
-                    _yearView.setVisibility(GONE);
-                    _monthList.setVisibility(VISIBLE);
-                    _year.setTextColor(_headerFontColorNormal);
-                    _month.setTextColor(_headerFontColorSelected);
-                }
-            }
-        });
-        _year.setOnClickListener(new OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                if (_yearView.getVisibility() == GONE) {
-                    _monthList.setVisibility(GONE);
-                    _yearView.setVisibility(VISIBLE);
-                    _year.setTextColor(_headerFontColorSelected);
-                    _month.setTextColor(_headerFontColorNormal);
-                }
             }
         });
     }
